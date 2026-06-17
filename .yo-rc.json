@@ -1,0 +1,41 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "zentry",
+    "buildTool": "maven",
+    "cacheProvider": "no",
+    "clientFramework": "react",
+    "clientTheme": "solar",
+    "clientThemeVariant": "primary",
+    "databaseType": "mongodb",
+    "devDatabaseType": "mongodb",
+    "enableTranslation": false,
+    "entities": [
+      "TipoDocumento",
+      "Anuncios",
+      "Servicio",
+      "ConjuntoResidencial",
+      "ServicioConjunto",
+      "VinculadoInmueble",
+      "Reservas",
+      "FacturaDePago",
+      "Vinculado",
+      "Inmueble",
+      "UsuarioConjunto"
+    ],
+    "jhiPrefix": "project",
+    "jhipsterVersion": "9.0.0",
+    "jwtSecretKey": "OTc5NzE4YmNiNjc5MmFkNWY0YzA3MGFlODcyYTUyMGRkYzM3MDc0ZDhhZjM1NTc3ODY3ODc5N2Y5MzMzNGI0MDlmMmI2OTgwMWE2YWViNmI2OWUyZmU2ZTU2ZDM0MTEyZWUwODYwNjU0ZDYwMzczN2NmZmMwYTk4OGQ1MTRhYmU=",
+    "languages": ["es"],
+    "lastLiquibaseTimestamp": 1781687702000,
+    "nativeLanguage": "es",
+    "packageName": "com.edu.sena.zentry",
+    "prodDatabaseType": "mongodb",
+    "reactive": false,
+    "searchEngine": false,
+    "serverPort": "8080",
+    "testFrameworks": ["cucumber"],
+    "websocket": false
+  }
+}
