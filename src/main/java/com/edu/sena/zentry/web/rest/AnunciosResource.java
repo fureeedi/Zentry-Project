@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -54,6 +55,7 @@ public class AnunciosResource {
      * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new anunciosDTO, or with status {@code 400 (Bad Request)} if the anuncios has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+    @PreAuthorize("hashRole('ROLE_ADMIN')")
     @PostMapping("")
     public ResponseEntity<AnunciosDTO> createAnuncios(@Valid @RequestBody AnunciosDTO anunciosDTO) throws URISyntaxException {
         LOG.debug("REST request to save Anuncios : {}", anunciosDTO);
@@ -76,6 +78,7 @@ public class AnunciosResource {
      * or with status {@code 500 (Internal Server Error)} if the anunciosDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+    @PreAuthorize("hashRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<AnunciosDTO> updateAnuncios(
         @PathVariable(value = "id", required = false) final String id,
@@ -110,6 +113,7 @@ public class AnunciosResource {
      * or with status {@code 500 (Internal Server Error)} if the anunciosDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
+    @PreAuthorize("hashRole('ROLE_ADMIN')")
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<AnunciosDTO> partialUpdateAnuncios(
         @PathVariable(value = "id", required = false) final String id,
@@ -142,6 +146,7 @@ public class AnunciosResource {
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Anuncios in body.
      */
+
     @GetMapping("")
     public ResponseEntity<List<AnunciosDTO>> getAllAnuncioses(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
@@ -177,6 +182,7 @@ public class AnunciosResource {
      * @param id the id of the anunciosDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
+    @PreAuthorize("hashRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAnuncios(@PathVariable("id") String id) {
         LOG.debug("REST request to delete Anuncios : {}", id);
