@@ -167,7 +167,9 @@ export const Reservas = () => {
                       ''
                     )}
                   </td>
-                  <td>{reservas.vinculado ? <Link to={`/vinculado/${reservas.vinculado.id}`}>{reservas.vinculado.id}</Link> : ''}</td>
+                  <td>
+                    {reservas.vinculado ? <Link to={`/vinculado/${reservas.vinculado.id}`}>{reservas.vinculado.numeroDocumento}</Link> : ''}
+                  </td>
                   <td className="text-end">
                     <div className="btn-group flex-btn-group-container">
                       <Button as={Link as any} to={`/reservas/${reservas.id}`} variant="info" size="sm" data-cy="entityDetailsButton">

@@ -1,6 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260617091102"
+    "changelogDate": "20260617214340"
   },
   "applications": ["zentry"],
   "dto": "mapstruct",
@@ -49,6 +49,7 @@
       "relationshipValidateRules": "required"
     },
     {
+      "otherEntityField": "numeroDocumento",
       "otherEntityName": "vinculado",
       "relationshipName": "vinculado",
       "relationshipSide": "left",

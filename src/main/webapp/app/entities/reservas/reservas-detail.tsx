@@ -64,7 +64,7 @@ export const ReservasDetail = () => {
           <dt>Servicio Conjunto</dt>
           <dd>{reservasEntity.servicioConjunto ? reservasEntity.servicioConjunto.id : ''}</dd>
           <dt>Vinculado</dt>
-          <dd>{reservasEntity.vinculado ? reservasEntity.vinculado.id : ''}</dd>
+          <dd>{reservasEntity.vinculado ? reservasEntity.vinculado.numeroDocumento : ''}</dd>
         </dl>
         <Button as={Link as any} to="/reservas" replace variant="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Volver</span>

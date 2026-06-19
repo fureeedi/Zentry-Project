@@ -145,7 +145,7 @@ relationship ManyToOne {
     Reservas{servicioConjunto required}
         to ServicioConjunto
 
-    Reservas{vinculado required}
+    Reservas{vinculado(numeroDocumento) required}
         to Vinculado
 
     Anuncios{user(login) required}

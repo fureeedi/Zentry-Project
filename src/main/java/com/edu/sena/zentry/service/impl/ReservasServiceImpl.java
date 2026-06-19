@@ -66,10 +66,14 @@ public class ReservasServiceImpl implements ReservasService {
         return reservasRepository.findAll(pageable).map(reservasMapper::toDto);
     }
 
+    public Page<ReservasDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return reservasRepository.findAllWithEagerRelationships(pageable).map(reservasMapper::toDto);
+    }
+
     @Override
     public Optional<ReservasDTO> findOne(String id) {
         LOG.debug("Request to get Reservas : {}", id);
-        return reservasRepository.findById(id).map(reservasMapper::toDto);
+        return reservasRepository.findOneWithEagerRelationships(id).map(reservasMapper::toDto);
     }
 
     @Override

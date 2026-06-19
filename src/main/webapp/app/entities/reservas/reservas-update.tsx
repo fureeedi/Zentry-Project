@@ -177,7 +177,7 @@ export const ReservasUpdate = () => {
                 {vinculados
                   ? vinculados.map(otherEntity => (
                       <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.id}
+                        {otherEntity.numeroDocumento}
                       </option>
                     ))
                   : null}
