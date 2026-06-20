@@ -2,9 +2,11 @@ package com.edu.sena.zentry.service.impl;
 
 import com.edu.sena.zentry.domain.Anuncios;
 import com.edu.sena.zentry.repository.AnunciosRepository;
+import com.edu.sena.zentry.security.SecurityUtils;
 import com.edu.sena.zentry.service.AnunciosService;
 import com.edu.sena.zentry.service.dto.AnunciosDTO;
 import com.edu.sena.zentry.service.mapper.AnunciosMapper;
+import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,11 @@ public class AnunciosServiceImpl implements AnunciosService {
     public AnunciosDTO save(AnunciosDTO anunciosDTO) {
         LOG.debug("Request to save Anuncios : {}", anunciosDTO);
         Anuncios anuncios = anunciosMapper.toEntity(anunciosDTO);
+        anuncios.setCreatedDate(Instant.now());
+        Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+        if (currentUserLogin.isPresent()) {
+            anuncios.setCreatedBy(currentUserLogin.get());
+        }
         anuncios = anunciosRepository.save(anuncios);
         return anunciosMapper.toDto(anuncios);
     }
@@ -41,6 +48,18 @@ public class AnunciosServiceImpl implements AnunciosService {
     public AnunciosDTO update(AnunciosDTO anunciosDTO) {
         LOG.debug("Request to update Anuncios : {}", anunciosDTO);
         Anuncios anuncios = anunciosMapper.toEntity(anunciosDTO);
+        Optional<Anuncios> optionalAnuncios = anunciosRepository.findById(anuncios.getId());
+        if (optionalAnuncios.isPresent()) {
+            Anuncios existingAnuncios = optionalAnuncios.get();
+            anuncios.setCreatedBy(existingAnuncios.getCreatedBy());
+            anuncios.setCreatedDate(existingAnuncios.getCreatedDate());
+        } else {
+            anuncios.setCreatedDate(Instant.now());
+            Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+            if (currentUserLogin.isPresent()) {
+                anuncios.setCreatedBy(currentUserLogin.get());
+            }
+        }
         anuncios = anunciosRepository.save(anuncios);
         return anunciosMapper.toDto(anuncios);
     }

@@ -2,9 +2,11 @@ package com.edu.sena.zentry.service.impl;
 
 import com.edu.sena.zentry.domain.VinculadoInmueble;
 import com.edu.sena.zentry.repository.VinculadoInmuebleRepository;
+import com.edu.sena.zentry.security.SecurityUtils;
 import com.edu.sena.zentry.service.VinculadoInmuebleService;
 import com.edu.sena.zentry.service.dto.VinculadoInmuebleDTO;
 import com.edu.sena.zentry.service.mapper.VinculadoInmuebleMapper;
+import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,11 @@ public class VinculadoInmuebleServiceImpl implements VinculadoInmuebleService {
     public VinculadoInmuebleDTO save(VinculadoInmuebleDTO vinculadoInmuebleDTO) {
         LOG.debug("Request to save VinculadoInmueble : {}", vinculadoInmuebleDTO);
         VinculadoInmueble vinculadoInmueble = vinculadoInmuebleMapper.toEntity(vinculadoInmuebleDTO);
+        vinculadoInmueble.setCreatedDate(Instant.now());
+        Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+        if (currentUserLogin.isPresent()) {
+            vinculadoInmueble.setCreatedBy(currentUserLogin.get());
+        }
         vinculadoInmueble = vinculadoInmuebleRepository.save(vinculadoInmueble);
         return vinculadoInmuebleMapper.toDto(vinculadoInmueble);
     }
@@ -44,6 +51,18 @@ public class VinculadoInmuebleServiceImpl implements VinculadoInmuebleService {
     public VinculadoInmuebleDTO update(VinculadoInmuebleDTO vinculadoInmuebleDTO) {
         LOG.debug("Request to update VinculadoInmueble : {}", vinculadoInmuebleDTO);
         VinculadoInmueble vinculadoInmueble = vinculadoInmuebleMapper.toEntity(vinculadoInmuebleDTO);
+        Optional<VinculadoInmueble> optionalVinculadoInmueble = vinculadoInmuebleRepository.findById(vinculadoInmueble.getId());
+        if (optionalVinculadoInmueble.isPresent()) {
+            VinculadoInmueble existingvinculadoInmueble = optionalVinculadoInmueble.get();
+            vinculadoInmueble.setCreatedBy(existingvinculadoInmueble.getCreatedBy());
+            vinculadoInmueble.setCreatedDate(existingvinculadoInmueble.getCreatedDate());
+        } else {
+            vinculadoInmueble.setCreatedDate(Instant.now());
+            Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+            if (currentUserLogin.isPresent()) {
+                vinculadoInmueble.setCreatedBy(currentUserLogin.get());
+            }
+        }
         vinculadoInmueble = vinculadoInmuebleRepository.save(vinculadoInmueble);
         return vinculadoInmuebleMapper.toDto(vinculadoInmueble);
     }

@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  */
 @Document(collection = "vinculado_inmueble")
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class VinculadoInmueble implements Serializable {
+public class VinculadoInmueble extends AbstractAuditingEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
