@@ -2,9 +2,11 @@ package com.edu.sena.zentry.service.impl;
 
 import com.edu.sena.zentry.domain.FacturaDePago;
 import com.edu.sena.zentry.repository.FacturaDePagoRepository;
+import com.edu.sena.zentry.security.SecurityUtils;
 import com.edu.sena.zentry.service.FacturaDePagoService;
 import com.edu.sena.zentry.service.dto.FacturaDePagoDTO;
 import com.edu.sena.zentry.service.mapper.FacturaDePagoMapper;
+import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,11 @@ public class FacturaDePagoServiceImpl implements FacturaDePagoService {
     public FacturaDePagoDTO save(FacturaDePagoDTO facturaDePagoDTO) {
         LOG.debug("Request to save FacturaDePago : {}", facturaDePagoDTO);
         FacturaDePago facturaDePago = facturaDePagoMapper.toEntity(facturaDePagoDTO);
+        facturaDePago.setCreatedDate(Instant.now());
+        Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+        if (currentUserLogin.isPresent()) {
+            facturaDePago.setCreatedBy(currentUserLogin.get());
+        }
         facturaDePago = facturaDePagoRepository.save(facturaDePago);
         return facturaDePagoMapper.toDto(facturaDePago);
     }
@@ -41,6 +48,18 @@ public class FacturaDePagoServiceImpl implements FacturaDePagoService {
     public FacturaDePagoDTO update(FacturaDePagoDTO facturaDePagoDTO) {
         LOG.debug("Request to update FacturaDePago : {}", facturaDePagoDTO);
         FacturaDePago facturaDePago = facturaDePagoMapper.toEntity(facturaDePagoDTO);
+        Optional<FacturaDePago> optionalFacturaDePago = facturaDePagoRepository.findById(facturaDePago.getId());
+        if (optionalFacturaDePago.isPresent()) {
+            FacturaDePago existingFacturaDePago = optionalFacturaDePago.get();
+            facturaDePago.setCreatedBy(existingFacturaDePago.getCreatedBy());
+            facturaDePago.setCreatedDate(existingFacturaDePago.getCreatedDate());
+        } else {
+            facturaDePago.setCreatedDate(Instant.now());
+            Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+            if (currentUserLogin.isPresent()) {
+                facturaDePago.setCreatedBy(currentUserLogin.get());
+            }
+        }
         facturaDePago = facturaDePagoRepository.save(facturaDePago);
         return facturaDePagoMapper.toDto(facturaDePago);
     }

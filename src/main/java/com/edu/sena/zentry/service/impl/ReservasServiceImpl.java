@@ -2,9 +2,11 @@ package com.edu.sena.zentry.service.impl;
 
 import com.edu.sena.zentry.domain.Reservas;
 import com.edu.sena.zentry.repository.ReservasRepository;
+import com.edu.sena.zentry.security.SecurityUtils;
 import com.edu.sena.zentry.service.ReservasService;
 import com.edu.sena.zentry.service.dto.ReservasDTO;
 import com.edu.sena.zentry.service.mapper.ReservasMapper;
+import java.time.Instant;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,11 @@ public class ReservasServiceImpl implements ReservasService {
     public ReservasDTO save(ReservasDTO reservasDTO) {
         LOG.debug("Request to save Reservas : {}", reservasDTO);
         Reservas reservas = reservasMapper.toEntity(reservasDTO);
+        reservas.setCreatedDate(Instant.now());
+        Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+        if (currentUserLogin.isPresent()) {
+            reservas.setCreatedBy(currentUserLogin.get());
+        }
         reservas = reservasRepository.save(reservas);
         return reservasMapper.toDto(reservas);
     }
@@ -41,6 +48,18 @@ public class ReservasServiceImpl implements ReservasService {
     public ReservasDTO update(ReservasDTO reservasDTO) {
         LOG.debug("Request to update Reservas : {}", reservasDTO);
         Reservas reservas = reservasMapper.toEntity(reservasDTO);
+        Optional<Reservas> optionalReservas = reservasRepository.findById(reservas.getId());
+        if (optionalReservas.isPresent()) {
+            Reservas existingReservas = optionalReservas.get();
+            reservas.setCreatedBy(existingReservas.getCreatedBy());
+            reservas.setCreatedDate(existingReservas.getCreatedDate());
+        } else {
+            reservas.setCreatedDate(Instant.now());
+            Optional<String> currentUserLogin = SecurityUtils.getCurrentUserLogin();
+            if (currentUserLogin.isPresent()) {
+                reservas.setCreatedBy(currentUserLogin.get());
+            }
+        }
         reservas = reservasRepository.save(reservas);
         return reservasMapper.toDto(reservas);
     }
@@ -66,10 +85,14 @@ public class ReservasServiceImpl implements ReservasService {
         return reservasRepository.findAll(pageable).map(reservasMapper::toDto);
     }
 
+    public Page<ReservasDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return reservasRepository.findAllWithEagerRelationships(pageable).map(reservasMapper::toDto);
+    }
+
     @Override
     public Optional<ReservasDTO> findOne(String id) {
         LOG.debug("Request to get Reservas : {}", id);
-        return reservasRepository.findById(id).map(reservasMapper::toDto);
+        return reservasRepository.findOneWithEagerRelationships(id).map(reservasMapper::toDto);
     }
 
     @Override

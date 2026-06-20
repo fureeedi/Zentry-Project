@@ -14,7 +14,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface ReservasMapper extends EntityMapper<ReservasDTO, Reservas> {
     @Mapping(target = "servicioConjunto", source = "servicioConjunto", qualifiedByName = "servicioConjuntoId")
-    @Mapping(target = "vinculado", source = "vinculado", qualifiedByName = "vinculadoId")
+    @Mapping(target = "vinculado", source = "vinculado", qualifiedByName = "vinculadoNumeroDocumento")
     ReservasDTO toDto(Reservas s);
 
     @Named("servicioConjuntoId")
@@ -22,8 +22,9 @@ public interface ReservasMapper extends EntityMapper<ReservasDTO, Reservas> {
     @Mapping(target = "id", source = "id")
     ServicioConjuntoDTO toDtoServicioConjuntoId(ServicioConjunto servicioConjunto);
 
-    @Named("vinculadoId")
+    @Named("vinculadoNumeroDocumento")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    VinculadoDTO toDtoVinculadoId(Vinculado vinculado);
+    @Mapping(target = "numeroDocumento", source = "numeroDocumento")
+    VinculadoDTO toDtoVinculadoNumeroDocumento(Vinculado vinculado);
 }

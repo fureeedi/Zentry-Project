@@ -1,6 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260617091002"
+    "changelogDate": "20260617214240"
   },
   "applications": ["zentry"],
   "dto": "mapstruct",

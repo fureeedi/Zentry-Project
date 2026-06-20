@@ -4,6 +4,7 @@ import static com.edu.sena.zentry.domain.ReservasAsserts.*;
 import static com.edu.sena.zentry.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -13,6 +14,7 @@ import com.edu.sena.zentry.domain.ServicioConjunto;
 import com.edu.sena.zentry.domain.Vinculado;
 import com.edu.sena.zentry.domain.enumeration.Estado;
 import com.edu.sena.zentry.repository.ReservasRepository;
+import com.edu.sena.zentry.service.ReservasService;
 import com.edu.sena.zentry.service.dto.ReservasDTO;
 import com.edu.sena.zentry.service.mapper.ReservasMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,12 +22,18 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +42,7 @@ import org.springframework.test.web.servlet.MockMvc;
  * Integration tests for the {@link ReservasResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class ReservasResourceIT {
@@ -67,8 +76,14 @@ class ReservasResourceIT {
     @Autowired
     private ReservasRepository reservasRepository;
 
+    @Mock
+    private ReservasRepository reservasRepositoryMock;
+
     @Autowired
     private ReservasMapper reservasMapper;
+
+    @Mock
+    private ReservasService reservasServiceMock;
 
     @Autowired
     private MockMvc restReservasMockMvc;
@@ -281,6 +296,23 @@ class ReservasResourceIT {
             .andExpect(jsonPath("$.[*].horafin").value(hasItem(DEFAULT_HORAFIN.format(LOCAL_DATE_TIME_FORMAT))))
             .andExpect(jsonPath("$.[*].cuposApartados").value(hasItem(DEFAULT_CUPOS_APARTADOS)))
             .andExpect(jsonPath("$.[*].estado").value(hasItem(DEFAULT_ESTADO.toString())));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllReservasesWithEagerRelationshipsIsEnabled() throws Exception {
+        when(reservasServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restReservasMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(reservasServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllReservasesWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(reservasServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restReservasMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(reservasRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
