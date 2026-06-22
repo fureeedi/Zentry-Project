@@ -1,6 +1,7 @@
 package com.edu.sena.zentry.web.rest;
 
 import com.edu.sena.zentry.repository.UsuarioConjuntoRepository;
+import com.edu.sena.zentry.security.AuthoritiesConstants;
 import com.edu.sena.zentry.service.UsuarioConjuntoService;
 import com.edu.sena.zentry.service.dto.UsuarioConjuntoDTO;
 import com.edu.sena.zentry.web.rest.errors.BadRequestAlertException;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -55,6 +57,7 @@ public class UsuarioConjuntoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<UsuarioConjuntoDTO> createUsuarioConjunto(@Valid @RequestBody UsuarioConjuntoDTO usuarioConjuntoDTO)
         throws URISyntaxException {
         LOG.debug("REST request to save UsuarioConjunto : {}", usuarioConjuntoDTO);
@@ -78,6 +81,7 @@ public class UsuarioConjuntoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<UsuarioConjuntoDTO> updateUsuarioConjunto(
         @PathVariable(value = "id", required = false) final String id,
         @Valid @RequestBody UsuarioConjuntoDTO usuarioConjuntoDTO
@@ -112,6 +116,7 @@ public class UsuarioConjuntoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<UsuarioConjuntoDTO> partialUpdateUsuarioConjunto(
         @PathVariable(value = "id", required = false) final String id,
         @NotNull @RequestBody UsuarioConjuntoDTO usuarioConjuntoDTO
@@ -144,6 +149,7 @@ public class UsuarioConjuntoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Usuario Conjuntos in body.
      */
     @GetMapping("")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<List<UsuarioConjuntoDTO>> getAllUsuarioConjuntos(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
@@ -166,6 +172,7 @@ public class UsuarioConjuntoResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the usuarioConjuntoDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<UsuarioConjuntoDTO> getUsuarioConjunto(@PathVariable("id") String id) {
         LOG.debug("REST request to get UsuarioConjunto : {}", id);
         Optional<UsuarioConjuntoDTO> usuarioConjuntoDTO = usuarioConjuntoService.findOne(id);
@@ -179,6 +186,7 @@ public class UsuarioConjuntoResource {
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority(\"" + AuthoritiesConstants.ADMIN + "\")")
     public ResponseEntity<Void> deleteUsuarioConjunto(@PathVariable("id") String id) {
         LOG.debug("REST request to delete UsuarioConjunto : {}", id);
         usuarioConjuntoService.delete(id);
